@@ -1,0 +1,67 @@
+舉例來說，一段參照自托馬斯·霍布斯《利維坦》的文句：
+Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.
+經過Base64編碼之後變成：
+TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlz
+IHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg
+dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlu
+dWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRo
+ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=
+編碼「Man」
+文字	M	a	n
+ASCII編碼	77	97	110
+位元	0	1	0	0	1	1	0	1	0	1	1	0	0	0	0	1	0	1	1	0	1	1	1	0
+索引	19	22	5	46
+Base64編碼	T	W	F	u
+在此例中，Base64演算法將3個位元組編碼為4個字元。
+Base64索引表：
+數值	字元	 	數值	字元	 	數值	字元	 	數值	字元
+0	A	16	Q	32	g	48	w
+1	B	17	R	33	h	49	x
+2	C	18	S	34	i	50	y
+3	D	19	T	35	j	51	z
+4	E	20	U	36	k	52	0
+5	F	21	V	37	l	53	1
+6	G	22	W	38	m	54	2
+7	H	23	X	39	n	55	3
+8	I	24	Y	40	o	56	4
+9	J	25	Z	41	p	57	5
+10	K	26	a	42	q	58	6
+11	L	27	b	43	r	59	7
+12	M	28	c	44	s	60	8
+13	N	29	d	45	t	61	9
+14	O	30	e	46	u	62	+
+15	P	31	f	47	v	63	/
+如果要編碼的位元組數不能被3整除，最後會多出1個或2個位元組，那麼可以使用下面的方法進行處理：先使用0位元組值在末尾補足，使其能夠被3整除，然後再進行Base64的編碼。在編碼後的Base64文字後加上一個或兩個=號，代表補足的位元組數。也就是說，當最後剩餘兩個八位(待補足)位元組（2個byte）時，最後一個6位的Base64位元組塊有四位是0值，最後附加上兩個等號；如果最後剩餘一個八位(待補足)位元組（1個byte）時，最後一個6位的base位元組塊有兩位是0值，最後附加一個等號。 參考下表：
+文字（1 Byte）	A		
+位元	0	1	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+位元（補0）	0	1	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Base64編碼	Q	Q	=	=
+文字（2 Byte）	B	C	
+位元	0	1	0	0	0	0	1	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0	0
+位元（補0）	0	1	0	0	0	0	1	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0	0
+Base64編碼	Q	k	M	=
+應用[編輯]
+MIME[編輯]
+在MIME格式的電子郵件中，Base64可以用來將binary的位元組序列資料編碼成ASCII字元序列構成的文字。使用時，在傳輸編碼方式中指定Base64。使用的字元包括大小寫拉丁字母各26個、數字10個、加號+和斜槓/，共64個字元，等號=用來作為字尾用途。
+完整的Base64定義可見RFC 1421和RFC 2045。編碼後的資料比原始資料略長，為原來的
+4
+3
+{\frac {4}{3}}。在電子郵件中，根據RFC 822規定，每76個字元，還需要加上一個Enter換行。可以估算編碼後資料長度大約為原長的135.1%。
+轉換的時候，將3位元組的資料，先後放入一個24位元的緩衝區中，先來的位元組占高位。資料不足3位元組的話，於緩衝區中剩下的位元用0補足。每次取出6位元（因為
+2
+6
+=
+64
+{\displaystyle 2^{6}=64}），按照其值選擇ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/中的字元作為編碼後的輸出，直到全部輸入資料轉換完成。
+若原資料長度不是3的倍數時且剩下1個輸入數據，則在編碼結果後加2個=；若剩下2個輸入數據，則在編碼結果後加1個=。
+IRCu[編輯]
+在IRCu等軟體所使用的P10 IRC伺服器間協定中，對客戶與伺服器的訊息類型號（client/server numerics）和二進位IP位址採用了Base64編碼。訊息類型號的長度固定為3位元組，故可直接編碼為4個位元組而不需要加填充。對IP位址進行編碼時，則需要在位址前添加一些0位元，使之可以編碼為整數個位元組。這裡所用的符號集與前述MIME的也有所不同，將+/改成了[]。
+UTF-7[編輯]
+UTF-7是一個修改版Base64（Modified Base64）。主要是將UTF-16的資料，用Base64的方法編碼為可列印的ASCII字元序列。目的是傳輸Unicode資料。主要的區別在於不用等號=補餘，因為該字元通常需要大量的轉譯。
+標準可見 RFC 2152，《A Mail-Safe Transformation Format of Unicode》。
+URL[編輯]
+Base64編碼可用於在HTTP環境下傳遞較長的標識資訊。例如，在Java持久化系統Hibernate中，就採用了Base64來將一個較長的唯一識別碼（一般為128-bit的UUID）編碼為一個字串，用作HTTP表單和HTTP GET URL中的參數。在其他應用程式中，也常常需要把二進位資料編碼為適合放在URL（包括隱藏表單域）中的形式。此時，採用Base64編碼不僅比較簡短，同時也具有不可讀性，即所編碼的資料不會被人用肉眼所直接看到。
+然而，標準的Base64並不適合直接放在URL裡傳輸，因為URL編碼器會把標準Base64中的/和+字元變為形如%XX的形式，而這些%號在存入資料庫時還需要再進行轉換，因為ANSI SQL中已將%號用作萬用字元。
+為解決此問題，可採用一種用於URL的改進Base64編碼，它不在末尾填充=號，並將標準Base64中的+和/分別改成了-和_，這樣就免去了在URL編解碼和資料庫儲存時所要做的轉換，避免了編碼資訊長度在此過程中的增加，並統一了資料庫、表單等處物件識別碼的格式。
+另有一種用於正規表示式的改進Base64變種，它將+和/改成了!和-，因為+，*以及前面在IRCu中用到的[和]在正規表示式中都可能具有特殊含義。
+此外還有一些變種，它們將+/改為_-或._（用作程式語言中的識別碼名稱）或.-（用於XML中的Nmtoken）甚至_:（用於XML中的Name）。
